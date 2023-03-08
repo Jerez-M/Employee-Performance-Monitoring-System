@@ -28,5 +28,8 @@ urlpatterns = [
     #path('contact',av.contact),
     #path('faq', av.faq),
     #path('admin/', admin.site.urls),
+
+    # for routing in master_app
+    path("", include('master_app.urls'))
 ]
 
