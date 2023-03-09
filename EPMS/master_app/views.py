@@ -105,20 +105,29 @@ def generateOTP():
 #Register User Function
 def org_register(request):
     if request.method == "POST":
-        o_name = request.POST['org_name']
-        o_email = request.POST['o_email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        contact_no = request.POST['contact_no']
-        website = request.POST['website']
-        o_address = request.POST['o_address']
-        if password1 == password2:
-            obj = Organization.objects.create(o_name=o_name, o_email=o_email, o_password=password1, o_contact=contact_no, o_website=website, o_address=o_address)
-            obj.save()
-            return HttpResponseRedirect('/LoginOrg')
-            messages.success(request,"You are successfully registered")
-        else:
-         messages.error("Password not matched!")
+        try:
+            o_name = request.POST['org_name']
+            o_email = request.POST['o_email']
+            password1 = request.POST['password1']
+            password2 = request.POST['password2']
+            contact_no = request.POST['contact_no']
+            website = request.POST['website']
+            o_address = request.POST['o_address']
+            
+            user_obj = Organization.objects.filter(o_email=o_email)
+            if user_obj.exists():
+                return render(request, 'OrgRegister.html', {'error' : '1'}) 
+            
+            if password1 == password2:
+                obj = Organization.objects.create(o_name=o_name, o_email=o_email, o_password=password1, o_contact=contact_no, o_website=website, o_address=o_address)
+                obj.save()
+                return HttpResponseRedirect('/LoginOrg')
+            else:
+                #messages.error(request, "Password not matched!")
+                return render(request, 'OrgRegister.html', {'error' : '2'}) 
+                #return render(request, 'OrgRegister.html')
+        except Exception as e:
+            return render(request, 'OrgRegister.html', {'error' : '3'})
     else:
         return render(request, 'OrgRegister.html')
     

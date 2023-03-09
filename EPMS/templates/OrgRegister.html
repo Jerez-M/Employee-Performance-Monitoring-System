@@ -1,6 +1,19 @@
 {% extends 'layout.html' %}
 {% block body %}
 <main>
+    {% if error == "1" %}
+    <div class="alert alert-danger text-center" role="alert">
+        Organisation Already Exists!
+    </div>
+    {% elif error == "2" %}
+    <div class="alert alert-danger text-center" role="alert">
+        Password Not Matching!
+    </div>
+    {% elif error == "3" %}
+    <div class="alert alert-danger text-center" role="alert">
+        Something Went Wrong!
+    </div>
+    {% endif %}
     <section class="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <div class="container">
             <div class="col-12 d-flex align-items-center justify-content-center">
