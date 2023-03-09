@@ -23,13 +23,10 @@ urlpatterns = [
     path('LoginUser', av.user_login),
     path('org_index', av.org_index),
     path('user_index', av.user_index),
-    path('SignUpOrg',av.org_register),
+    path('SignUpOrg', av.org_register),
     #path('logout',av.logout),
     #path('contact',av.contact),
     #path('faq', av.faq),
     #path('admin/', admin.site.urls),
-
-    # for routing in master_app
-    path("", include('master_app.urls'))
 ]
 

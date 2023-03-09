@@ -118,7 +118,7 @@ def org_register(request):
             return HttpResponseRedirect('/LoginOrg')
             messages.success(request,"You are successfully registered")
         else:
-            messages.error("Password not matched!")
+         messages.error("Password not matched!")
     else:
         return render(request, 'OrgRegister.html')
     
