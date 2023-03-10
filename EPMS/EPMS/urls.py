@@ -27,8 +27,6 @@ urlpatterns = [
     path('logout', av.logout),
     path('org_change_password', av.org_change_password),
     path('user_change_password', av.user_change_password),
-    #path('contact',av.contact),
-    #path('faq', av.faq),
-    #path('admin/', admin.site.urls),
+
 ]
 
