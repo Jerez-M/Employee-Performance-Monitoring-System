@@ -131,3 +131,48 @@ def org_register(request):
     else:
         return render(request, 'OrgRegister.html')
     
+@csrf_exempt
+def logout(request):
+    if request.method == 'POST':
+        try:
+            for key in list(request.session.keys()):
+                del request.session[key]
+            messages.success(request, "You are logged out successfully!")
+            return HttpResponseRedirect('/')
+        except:
+            messages.error(request, "Some error occurred during logging out!")
+            return HttpResponseRedirect('/')
+
+#Organisation change password
+def org_change_password(request):
+    if request.method == 'POST':
+        oldPwd = request.POST['oldPwd']
+        newPwd = request.POST['newPwd']
+        o_id = request.session['o_id']
+        o_email = request.session['o_email']
+        org_details = Organization.objects.filter(o_email=o_email, o_password=oldPwd, pk=o_id).update(o_password=newPwd)
+        if org_details:
+            messages.success(request, "Password Change Successfully")
+            return HttpResponseRedirect('/org_index')
+        else:
+            messages.error(request, "Old Password was not matched!")
+            return HttpResponseRedirect('/org_change_password')
+    else:
+        return render(request, 'OrgChangePass.html')
+    
+@user_login_required
+def user_change_password(request):
+    if request.method == 'POST':
+        oldPwd = request.POST['oldPwd']
+        newPwd = request.POST['newPwd']
+        u_id = request.session['u_id']
+        u_email = request.session['u_email']
+        emp_details = Employee.objects.filter(e_email=u_email, e_password=oldPwd, pk=u_id).update(e_password=newPwd)
+        if emp_details:
+            messages.success(request,"Password Change Successfully")
+            return HttpResponseRedirect('/user_index')
+        else:
+            messages.error(request, "Old Password was not matched!")
+            return HttpResponseRedirect('/user_change_password')
+    else:
+        return render(request, 'EmpChangePass.html')
