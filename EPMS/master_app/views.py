@@ -9,10 +9,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 import datetime
 from django.core.mail import send_mail
+from password_generator import PasswordGenerator
 
 
 
-#pwo = PasswordGenerator()
+pwo = PasswordGenerator()
+
+
 #write your views below
 
 #Index page
@@ -176,3 +179,86 @@ def user_change_password(request):
             return HttpResponseRedirect('/user_change_password')
     else:
         return render(request, 'EmpChangePass.html')
+    
+#Add Employees
+@org_login_required
+def add_emp(request):
+    if request.method == 'POST':
+        o_id = request.session['o_id']
+        e_name = request.POST['e_name']
+        e_email = request.POST['e_email']
+        e_password = pwo.generate()
+        e_gender = request.POST['e_gender']
+        e_contact = request.POST['e_contact']
+        e_address = request.POST['e_address']
+        empObj = Employee.objects.create(e_name=e_name, e_email=e_email, e_password=e_password,e_contact=e_contact, e_gender=e_gender, e_address=e_address, o_id_id=o_id)
+        if empObj:
+            org_name = request.session['o_name']
+            messages.success(request, "Employee was added successfully!")
+            return HttpResponseRedirect('/org_index')
+        else:
+            messages.error(request, "Some error was occurred!")
+            return HttpResponseRedirect('/create-emp')
+    return render(request, 'AddEmp.html')
+
+@org_login_required
+def read_emp(request):
+    if request.method == 'GET':
+        o_id = request.session['o_id']
+        emp_details = Employee.objects.filter(o_id_id=o_id).values()
+        return render(request, 'ViewEmp.html', {"msg": emp_details})
+    
+@org_login_required
+def view_emp(request,eid):
+    if request.method == 'GET':
+        o_id = request.session['o_id']
+        emp_details = Employee.objects.filter(o_id_id=o_id, id=eid).first()
+        #count_no_of_total_tasks = Task.objects.filter(o_id_id=o_id, e_id_id=eid).count()
+        #count_no_of_completed_tasks = Task.objects.filter(o_id_id=o_id, e_id_id=eid, t_status="completed").count()
+        #count_no_of_pending_tasks = count_no_of_total_tasks - count_no_of_completed_tasks
+        #pel_details = Project_Employee_Linker.objects.filter(o_id_id=o_id, e_id_id=eid).values_list('p_id_id', flat=True)
+        #project_details = Project.objects.filter(id__in=pel_details).values()
+        return render(request, 'EmpDetails.html', {"msg": emp_details})
+    
+@org_login_required
+def update_emp(request, eid):
+    try:
+        emp_detail = Employee.objects.filter(id=eid,o_id_id=request.session['o_id'])
+        if request.method == "POST":
+            e_name = request.POST['e_name']
+            e_email = request.POST['e_email']
+            e_gender = request.POST['e_gender']
+            e_contact = request.POST['e_contact']
+            e_address = request.POST['e_address']
+            emp_detail = Employee.objects.get(id=eid)
+            emp_detail.e_name = e_name
+            emp_detail.e_email = e_email
+            emp_detail.e_gender = e_gender
+            emp_detail.e_contact = e_contact
+            emp_detail.e_address = e_address
+            emp_detail.save()
+            if emp_detail:
+                messages.success(request, "Employee Data was updated successfully!")
+                return HttpResponseRedirect('/read-emp')
+            else:
+                messages.error(request, "Some Error was occurred!")
+                return HttpResponseRedirect('/read-emp')
+        return render(request, 'UpdateEmp.html', {'emp_detail':emp_detail[0]})
+    except:
+        messages.error(request, "Some Error was occurred!")
+        return HttpResponseRedirect('/read-emp')
+
+@org_login_required
+def del_emp(request, eid):
+    try:
+        emp_detail = Employee.objects.filter(id=eid,o_id_id=request.session['o_id']).delete()
+        if emp_detail:
+            messages.success(request, "Employee was deleted successfully!")
+            return HttpResponseRedirect('/read-emp')
+        else:
+            messages.error(request, "Some Error occurred!")
+            return HttpResponseRedirect('/read-emp')
+    except:
+        messages.error(request, "Some Error occurred!")
+        return HttpResponseRedirect('/read-emp')
+

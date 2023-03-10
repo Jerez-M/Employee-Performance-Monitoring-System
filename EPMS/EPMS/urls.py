@@ -27,6 +27,11 @@ urlpatterns = [
     path('logout', av.logout),
     path('org_change_password', av.org_change_password),
     path('user_change_password', av.user_change_password),
-    #path('admin/', admin.site.urls),
+    path('create-emp',av.add_emp),
+    path('read-emp',av.read_emp),
+    path('view-emp/<int:eid>', av.view_emp),
+    path('update-emp/<int:eid>', av.update_emp),
+    path('del-emp/<int:eid>', av.del_emp),
+    #path('admin/', admin.site.urls)
 ]
 

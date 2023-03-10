@@ -361,25 +361,26 @@
 
     <main class="content">
         <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
-            <div class="container-fluid px-0">
-                <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
-                    <div class="h-100 row align-items-center">
-                        {% include 'includes/_messages.html' %}
-                        {% block body %}{% endblock %}
-                        <footer id="sticky-footer" class="py-4">
-                            <div class="d-flex text-center justify-content-center align-items-center"
-                                role="contentinfo">
-                                <p class="font-weight-bold font-medium mb-0">Copyright © BRAINSTAKE
-                                    <span class="current-year">
-                                        <script>document.write(new Date().getFullYear())</script>
-                                    </span>. All rights reserved.
-                                </p>
-                            </div>
-                        </footer>
-                    </div>
+        </nav>
+        <div class="container-fluid px-0 py-0 mt-0">
+            <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
+                <div class="h-100 row align-items-center">
+                    {% include 'includes/_messages.html' %}
+                    {% block body %}{% endblock %}
+                    <footer id="sticky-footer" class="py-4">
+                        <div class="d-flex text-center justify-content-center align-items-center"
+                            role="contentinfo">
+                            <p class="font-weight-bold font-medium mb-0">Copyright © BRAINSTAKE
+                                <span class="current-year">
+                                    <script>document.write(new Date().getFullYear())</script>
+                                </span>. All rights reserved.
+                            </p>
+                        </div>
+                    </footer>
                 </div>
             </div>
-        </nav>
+        </div>
+
     </main>
     <script>
         request_url = 'get_emp_logged_in_count_today';
